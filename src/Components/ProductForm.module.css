@@ -1,0 +1,75 @@
+.addNewProduct {
+    max-width: 600px; /* Limit form width */
+    margin: 0 auto 40px auto; /* Center the form */
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e0e0e0;
+}
+
+.addNewProduct h2 {
+    color: #b48a78;
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.formGroup {
+    margin-bottom: 15px;
+    display: flex; 
+    align-items: center;
+}
+
+.formGroup label {
+    width: 120px; 
+    margin-right: 15px;
+    text-align: right; 
+    font-weight: bold;
+    color: #333;
+}
+
+.formGroup input[type="text"],
+.formGroup input[type="date"],
+.formGroup select,
+.formGroup textarea {
+    flex-grow: 1; /* Allow input fields to take available space */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+    box-sizing: border-box; /* Include padding and border in element's total width/height */
+}
+
+.formGroup textarea {
+    resize: vertical; /* Allow vertical resizing of textarea */
+    min-height: 80px;
+}
+
+.newInput {
+    display: flex; /* Turn the container into a flex container */
+    gap: 10px;    /* Add some space between the input and button */
+    flex-grow: 1; 
+    align-items: center; /* Vertically center them */ 
+   justify-content: flex-end;
+   margin-bottom: 15px;
+}
+
+.newInput input {
+    max-width: 500px;
+    flex-grow: 0; 
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.formActions {
+    text-align: center; /* This centers inline elements (like buttons) */
+    margin-top: 25px; 
+}
+.addNewButton {
+    transition: background-color 0.3s ease;
+}
+
+.addNewButton:hover {
+    background-color: #d7805b; /* Darker blue on hover */
+}
