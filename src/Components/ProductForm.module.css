@@ -63,7 +63,7 @@
 }
 
 .formActions {
-    text-align: center; /* This centers inline elements (like buttons) */
+    text-align: center; 
     margin-top: 25px; 
 }
 .addNewButton {
@@ -71,5 +71,10 @@
 }
 
 .addNewButton:hover {
-    background-color: #d7805b; /* Darker blue on hover */
+    background-color: #d7805b; 
+}
+
+.addNewButton:disabled {
+    background-color: grey;
+    cursor: not-allowed;
 }

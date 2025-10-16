@@ -1,59 +1,62 @@
-import { useState } from "react";
-import { nanoid } from "nanoid";
-import "./App.css";
-import ProductList from "./Components/ProductList";
-import ProductForm from "./Components/ProductForm";
-import Mango from "/TraderJoesMango.JPG"
+import { useEffect, useState } from 'react';
+import './App.css';
+import ProductList from './Components/ProductList';
+import ProductForm from './Components/ProductForm';
+import { db } from '../firebase';
+import {
+  addDoc,
+  collection,
+  serverTimestamp,
+  onSnapshot,
+} from 'firebase/firestore';
 
 function App() {
-  const [products, setProducts] = useState([
-    {
-      id: nanoid(),
-      image: Mango,
-      title: "Lays Chip",
-      store: "Trader Joe's",
-      date: "12/12/2025",
-      category: "Fruit",
-      note: "this taste very good",
-    },
-    {
-      id: nanoid(),
-      image: Mango,
-      title: "Ramen",
-      store: "Costco",
-      date: "10/12/2025",
-      category: "Food",
-    },
-    {
-      id: nanoid(),
-      image: Mango,
-      title: "Sweet Potato",
-      store: "Aldi",
-      date: "10/12/2025",
-      category: "Food",
-    },
-  ]);
+  const [products, setProducts] = useState([]);
+  const productsCollection = 'products';
 
-  const [categories, setCategories] = useState(["Food", "Snack"]);
-  const [stores, setStores] = useState(["Walmart", "Trader Joe's"]);
+  useEffect(() => {
+    const unsubscribe = onSnapshot(
+      collection(db, 'products'),
+      (querySnapshot) => {
+        const productsArray = querySnapshot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }));
+        setProducts(productsArray);
+      },
 
-  function addProduct(formData) {
+      (error) => {
+        console.error('Error fetching real-time data: ', error);
+      }
+    );
+    return () => unsubscribe();
+  }, [db]);
+
+  console.log(products);
+
+  const [categories, setCategories] = useState(['Food', 'Snack']);
+  const [stores, setStores] = useState(['Walmart', "Trader Joe's"]);
+
+  async function addProduct(formData) {
     const inputDateString = formData.date;
-    const [year, month, day] = inputDateString.split("-");
+    const [year, month, day] = inputDateString.split('-');
     const formattedDate = `${month}/${day}/${year}`;
 
     const newProduct = {
-      id: nanoid(),
-      title: formData.name,
-      store: formData.store,
+      ...formData,
       date: formattedDate,
-      category: formData.category,
-      note: formData.note,
-      image: formData.image,
+      timestamp: serverTimestamp(),
     };
 
-    const newProducts = [...products, newProduct];
-    setProducts(newProducts);
+    try {
+      const docRef = await addDoc(
+        collection(db, productsCollection),
+        newProduct
+      );
+      console.log('Document written with ID: ', docRef.id);
+    } catch (e) {
+      console.error('Error adding document: ', e);
+    }
   }
 
   return (
