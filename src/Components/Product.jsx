@@ -4,6 +4,9 @@ import { FaTrashAlt } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
 
 function Product({ product }) {
+
+  
+
   return (
     <>
       <div className={styles.productCard}>
@@ -11,8 +14,8 @@ function Product({ product }) {
           <FaTrashAlt />
           <MdEdit />
         </div>
-        <img src={product.image} />
-        <h3>{product.title}</h3>
+        <img src={product.img} />
+        <h3>{product.name}</h3>
         <p>Store: {product.store}</p>
         <p>Date: {product.date}</p>
         <p>Category: {product.category}</p>
