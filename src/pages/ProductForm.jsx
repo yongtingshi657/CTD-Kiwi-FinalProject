@@ -4,6 +4,7 @@ import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { storage } from '../../firebase';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getTodayDate, getDateFormatForForm } from '../utils';
+import NewSelection from '../Components/NewSelection';
 
 const ProductForm = ({
   addProduct,
@@ -112,7 +113,7 @@ const ProductForm = ({
 
   const [newCategoryInput, setNewCategoryInput] = useState('');
   const [newStoreNameInput, setNewStoreNameInput] = useState('');
-  
+
   function handleAddCategory() {
     const categoryName = newCategoryInput.trim();
     if (categoryName.length === 0) {
@@ -184,13 +185,12 @@ const ProductForm = ({
           </select>
         </div>
         {formData.store === 'NEW_STORE' && (
-          <div className={styles.newInput}>
-            <input
-              value={newStoreNameInput}
-              onChange={(e) => setNewStoreNameInput(e.target.value)}
-            ></input>
-            <button onClick={handleAddStore}>Add New Store</button>
-          </div>
+          <NewSelection 
+          type="Store"
+          newSelectionInput={newStoreNameInput}
+          setNewSelectionInput={setNewStoreNameInput}
+          handleAddSelection={handleAddStore}
+          />
         )}
         <div className={styles.formGroup}>
           <label htmlFor="category">Category</label>
@@ -210,13 +210,12 @@ const ProductForm = ({
           </select>
         </div>
         {formData.category === 'NEW_CATEGORY' && (
-          <div className={styles.newInput}>
-            <input
-              value={newCategoryInput}
-              onChange={(e) => setNewCategoryInput(e.target.value)}
-            ></input>
-            <button onClick={handleAddCategory}>Add New Category</button>
-          </div>
+           <NewSelection 
+          type="Category"
+          newSelectionInput={newCategoryInput}
+          setNewSelectionInput={setNewCategoryInput}
+          handleAddSelection={handleAddCategory}
+          />
         )}
 
         <div className={styles.formGroup}>
