@@ -30,7 +30,7 @@
     color: grey;
     font-size: 1em;
     font-weight: 500;
-    padding: 5px 0; /* Vertical padding for better hit area */
+    padding: 5px 0; 
     transition: color 0.3s ease, border-bottom 0.3s ease;
 
 }

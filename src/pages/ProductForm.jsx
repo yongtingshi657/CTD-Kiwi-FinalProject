@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import  { useEffect, useState } from 'react';
 import styles from './ProductForm.module.css';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { storage } from '../../firebase';
@@ -30,7 +30,7 @@ const ProductForm = ({
     note: '',
   };
 
-  const [formData, setFormData] = React.useState(() => {
+  const [formData, setFormData] = useState(() => {
     if (mode === 'edit' && productToEdit) {
       return {
         ...productToEdit,
