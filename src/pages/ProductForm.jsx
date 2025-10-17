@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import Mango from '/TraderJoesMango.JPG';
 import styles from './ProductForm.module.css';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { storage } from '../../firebase';
+import { useParams, useNavigate } from 'react-router-dom';
+import { getTodayDate, getDateFormatForForm } from '../utils';
 
 const ProductForm = ({
   addProduct,
@@ -10,25 +11,37 @@ const ProductForm = ({
   setCategories,
   stores,
   setStores,
+  products,
+  mode,
+  editProduct,
 }) => {
-  function getTodayDate() {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  }
+  // update
+  const { id } = useParams();
+  const productToEdit = products.find((product) => product.id === id);
 
-  const [formData, setFormData] = useState({
+  const navigate = useNavigate()
+
+  const defaultNewProductData = {
     name: '',
     date: getTodayDate(),
     category: '',
     store: '',
     note: '',
+  };
+
+  const [formData, setFormData] = React.useState(() => {
+    if (mode === 'edit' && productToEdit) {
+      return {
+        ...productToEdit,
+        date: getDateFormatForForm(productToEdit.date),
+      };
+    } else {
+      return defaultNewProductData;
+    }
   });
 
   const [file, setFile] = useState('');
-  const [percentage, setPercentage] = useState(null)
+  const [percentage, setPercentage] = useState(null);
 
   useEffect(() => {
     const uploadFile = () => {
@@ -39,11 +52,10 @@ const ProductForm = ({
       uploadTask.on(
         'state_changed',
         (snapshot) => {
-          
           const progress =
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
           console.log('Upload is ' + progress + '% done');
-            setPercentage(progress)
+          setPercentage(progress);
           switch (snapshot.state) {
             case 'paused':
               console.log('Upload is paused');
@@ -56,11 +68,11 @@ const ProductForm = ({
           }
         },
         (error) => {
-          console.log(error)
+          console.log(error);
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            setFormData((prev)=> ({...prev, img: downloadURL}))
+            setFormData((prev) => ({ ...prev, img: downloadURL }));
           });
         }
       );
@@ -69,8 +81,7 @@ const ProductForm = ({
     file && uploadFile();
   }, [file]);
 
-  const [newCategoryInput, setNewCategoryInput] = useState('');
-  const [newStoreNameInput, setNewStoreNameInput] = useState('');
+
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -89,16 +100,19 @@ const ProductForm = ({
       return;
     }
 
-    addProduct(formData);
-    setFormData({
-      name: '',
-      date: getTodayDate(),
-      category: '',
-      store: '',
-      note: '',
-    });
+    if (mode === 'edit' && productToEdit) {
+      editProduct(formData)
+    } else {
+      addProduct(formData);
+      setFormData(defaultNewProductData);
+    }
+
+    navigate("/")
   }
 
+  const [newCategoryInput, setNewCategoryInput] = useState('');
+  const [newStoreNameInput, setNewStoreNameInput] = useState('');
+  
   function handleAddCategory() {
     const categoryName = newCategoryInput.trim();
     if (categoryName.length === 0) {
@@ -127,7 +141,7 @@ const ProductForm = ({
 
   return (
     <div className={styles.addNewProduct}>
-      <h2>Add Your Favorite</h2>
+      <h2>{mode.charAt(0).toUpperCase() + mode.slice(1)} Your Favorite</h2>
       <form onSubmit={handleSubmit}>
         <div className={styles.formGroup}>
           <label htmlFor="name">Product Name</label>
@@ -227,8 +241,12 @@ const ProductForm = ({
           />
         </div>
         <div className={styles.formActions}>
-          <button className={styles.addNewButton} type="submit" disabled={percentage!== null && percentage <100}>
-            Add New Product
+          <button
+            className={styles.addNewButton}
+            type="submit"
+            disabled={percentage !== null && percentage < 100}
+          >
+            {mode.charAt(0).toUpperCase() + mode.slice(1)} New Product
           </button>
         </div>
       </form>
