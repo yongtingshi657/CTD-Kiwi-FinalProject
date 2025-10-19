@@ -1,4 +1,3 @@
-import React from 'react';
 import styles from './Product.module.css';
 import { FaTrashAlt } from 'react-icons/fa';
 import { MdEdit } from 'react-icons/md';

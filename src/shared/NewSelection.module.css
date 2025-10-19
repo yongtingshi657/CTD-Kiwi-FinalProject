@@ -1,0 +1,16 @@
+.newInput {
+    display: flex; 
+    gap: 10px;  
+    flex-grow: 1; 
+    align-items: center; 
+   justify-content: flex-end;
+   margin-bottom: 15px;
+}
+
+.newInput input {
+    max-width: 500px;
+    flex-grow: 0; 
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}

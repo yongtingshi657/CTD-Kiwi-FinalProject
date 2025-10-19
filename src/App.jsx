@@ -14,7 +14,7 @@ import {
   updateDoc,
 } from 'firebase/firestore';
 import { getDateForDBFormat } from './utils';
-import Layout from './Components/Layout';
+import Layout from './shared/Layout';
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -39,10 +39,9 @@ function App() {
   }, []);
 
   const [categories, setCategories] = useState(['Food', 'Snack', 'Drink']);
-  const [stores, setStores] = useState(['Walmart', "Trader Joe's", "Costco"]);
+  const [stores, setStores] = useState(['Walmart', "Trader Joe's", 'Costco']);
 
   async function addProduct(formData) {
-  
     const formattedDate = getDateForDBFormat(formData);
 
     const newProduct = {
@@ -74,22 +73,20 @@ function App() {
   // update products
   async function editProduct(product) {
     try {
-      
       const updateProdcut = doc(db, productsCollection, product.id);
       await updateDoc(updateProdcut, {
-        ...product
+        ...product,
       });
     } catch (error) {
       console.error('Error updating document: ', error);
     }
   }
 
-
   return (
     <>
       <Routes>
-        <Route path="/" element={<Layout />} >
-            <Route
+        <Route path="/" element={<Layout />}>
+          <Route
             index
             element={<Home products={products} deleteProduct={deleteProduct} />}
           />

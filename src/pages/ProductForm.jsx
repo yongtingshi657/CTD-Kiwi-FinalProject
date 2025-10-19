@@ -1,10 +1,10 @@
-import  { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './ProductForm.module.css';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { storage } from '../../firebase';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getTodayDate, getDateFormatForForm } from '../utils';
-import NewSelection from '../Components/NewSelection';
+import NewSelection from '../shared/NewSelection';
 
 const ProductForm = ({
   addProduct,
@@ -20,7 +20,7 @@ const ProductForm = ({
   const { id } = useParams();
   const productToEdit = products.find((product) => product.id === id);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const defaultNewProductData = {
     name: '',
@@ -82,8 +82,6 @@ const ProductForm = ({
     file && uploadFile();
   }, [file]);
 
-
-
   function handleChange(e) {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
@@ -102,13 +100,13 @@ const ProductForm = ({
     }
 
     if (mode === 'edit' && productToEdit) {
-      editProduct(formData)
+      editProduct(formData);
     } else {
       addProduct(formData);
       setFormData(defaultNewProductData);
     }
 
-    navigate("/")
+    navigate('/');
   }
 
   const [newCategoryInput, setNewCategoryInput] = useState('');
@@ -185,11 +183,11 @@ const ProductForm = ({
           </select>
         </div>
         {formData.store === 'NEW_STORE' && (
-          <NewSelection 
-          type="Store"
-          newSelectionInput={newStoreNameInput}
-          setNewSelectionInput={setNewStoreNameInput}
-          handleAddSelection={handleAddStore}
+          <NewSelection
+            type="Store"
+            newSelectionInput={newStoreNameInput}
+            setNewSelectionInput={setNewStoreNameInput}
+            handleAddSelection={handleAddStore}
           />
         )}
         <div className={styles.formGroup}>
@@ -210,11 +208,11 @@ const ProductForm = ({
           </select>
         </div>
         {formData.category === 'NEW_CATEGORY' && (
-           <NewSelection 
-          type="Category"
-          newSelectionInput={newCategoryInput}
-          setNewSelectionInput={setNewCategoryInput}
-          handleAddSelection={handleAddCategory}
+          <NewSelection
+            type="Category"
+            newSelectionInput={newCategoryInput}
+            setNewSelectionInput={setNewCategoryInput}
+            handleAddSelection={handleAddCategory}
           />
         )}
 

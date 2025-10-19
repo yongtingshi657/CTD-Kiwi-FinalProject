@@ -1,5 +1,4 @@
-import React from 'react'
-import styles from '../pages/ProductForm.module.css';
+import styles from './NewSelection.module.css';
 
 function NewSelection({type, newSelectionInput, setNewSelectionInput, handleAddSelection}) {
   return (

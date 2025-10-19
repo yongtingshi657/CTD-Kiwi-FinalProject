@@ -1,0 +1,37 @@
+.searchContainer {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc; 
+  border-radius: 20px; 
+  padding: 8px 15px;
+  width: 300px; 
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  background-color: #f8f8f8; 
+}
+
+.searchIcon {
+  color: #555; 
+  margin-right: 10px; 
+  font-size: 1.1em; 
+}
+
+.searchInput {
+  border: none;
+  outline: none; 
+  flex-grow: 1; 
+  font-size: 16px;
+  background-color: transparent; 
+  color: #333;
+}
+
+.cancelIcon {
+  color: #999; 
+  font-size: 1.1em;
+  margin-left: 10px;
+  cursor: pointer; 
+  transition: color 0.2s ease-in-out; 
+}
+.cancelIcon:hover {
+  color: #555; 
+}
+
