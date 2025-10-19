@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Product from '../feature/Product';
+import ProductCard from '../feature/ProductCard';
 import Search from '../feature/Search';
 import styles from './Home.module.css';
 import { Link } from 'react-router-dom';
@@ -59,7 +59,7 @@ function Home({ products, deleteProduct, editProduct }) {
       ) : (
         <div className={styles.productContainer}>
           {filteredProduct.map((product) => (
-            <Product
+            <ProductCard
               product={product}
               key={product.id}
               deleteProduct={deleteProduct}

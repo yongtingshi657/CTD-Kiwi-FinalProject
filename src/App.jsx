@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Routes, Route, useNavigate } from 'react-router';
+import { Routes, Route } from 'react-router';
 import './App.css';
 import Home from './pages/Home';
 import ProductForm from './pages/ProductForm';
@@ -15,6 +15,7 @@ import {
 } from 'firebase/firestore';
 import { getDateForDBFormat } from './utils';
 import Layout from './shared/Layout';
+import ProductDetail from './pages/ProductDetail';
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -118,6 +119,7 @@ function App() {
               />
             }
           />
+          <Route path="product/:id" element={<ProductDetail products={products}deleteProduct={deleteProduct}/>} />
         </Route>
       </Routes>
     </>

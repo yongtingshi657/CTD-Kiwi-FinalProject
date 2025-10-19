@@ -1,6 +1,6 @@
 import { FaSearch, FaTimes } from 'react-icons/fa';
 import Styles from './Search.module.css';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 
 function Search({ handleSearch, isSearching, handleCancelSearch }) {
   const inputRef = useRef(null);
