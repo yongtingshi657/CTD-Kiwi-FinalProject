@@ -1,6 +1,6 @@
 .addNewProduct {
-    max-width: 600px; /* Limit form width */
-    margin: 0 auto 40px auto; /* Center the form */
+    max-width: 600px; 
+    margin: 0 auto 40px auto; 
     padding: 30px;
     background-color: #ffffff;
     border-radius: 8px;
@@ -32,24 +32,24 @@
 .formGroup input[type="date"],
 .formGroup select,
 .formGroup textarea {
-    flex-grow: 1; /* Allow input fields to take available space */
+    flex-grow: 1; 
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 1em;
-    box-sizing: border-box; /* Include padding and border in element's total width/height */
+    box-sizing: border-box; 
 }
 
 .formGroup textarea {
-    resize: vertical; /* Allow vertical resizing of textarea */
+    resize: vertical;
     min-height: 80px;
 }
 
 .newInput {
-    display: flex; /* Turn the container into a flex container */
-    gap: 10px;    /* Add some space between the input and button */
+    display: flex; 
+    gap: 10px;  
     flex-grow: 1; 
-    align-items: center; /* Vertically center them */ 
+    align-items: center; 
    justify-content: flex-end;
    margin-bottom: 15px;
 }

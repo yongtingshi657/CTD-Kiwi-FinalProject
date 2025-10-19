@@ -1,14 +1,20 @@
 import { useEffect, useState } from 'react';
+import { Routes, Route, useNavigate } from 'react-router';
 import './App.css';
-import ProductList from './Components/ProductList';
-import ProductForm from './Components/ProductForm';
+import Home from './pages/Home';
+import ProductForm from './pages/ProductForm';
 import { db } from '../firebase';
 import {
   addDoc,
   collection,
   serverTimestamp,
   onSnapshot,
+  deleteDoc,
+  doc,
+  updateDoc,
 } from 'firebase/firestore';
+import { getDateForDBFormat } from './utils';
+import Layout from './Components/Layout';
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -30,17 +36,14 @@ function App() {
       }
     );
     return () => unsubscribe();
-  }, [db]);
+  }, []);
 
-  console.log(products);
-
-  const [categories, setCategories] = useState(['Food', 'Snack']);
-  const [stores, setStores] = useState(['Walmart', "Trader Joe's"]);
+  const [categories, setCategories] = useState(['Food', 'Snack', 'Drink']);
+  const [stores, setStores] = useState(['Walmart', "Trader Joe's", "Costco"]);
 
   async function addProduct(formData) {
-    const inputDateString = formData.date;
-    const [year, month, day] = inputDateString.split('-');
-    const formattedDate = `${month}/${day}/${year}`;
+  
+    const formattedDate = getDateForDBFormat(formData);
 
     const newProduct = {
       ...formData,
@@ -59,16 +62,67 @@ function App() {
     }
   }
 
+  async function deleteProduct(id) {
+    try {
+      await deleteDoc(doc(db, productsCollection, id));
+      console.log(`Successfully deleted document with ID: ${id}`);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  // update products
+  async function editProduct(product) {
+    try {
+      
+      const updateProdcut = doc(db, productsCollection, product.id);
+      await updateDoc(updateProdcut, {
+        ...product
+      });
+    } catch (error) {
+      console.error('Error updating document: ', error);
+    }
+  }
+
+
   return (
     <>
-      <ProductList products={products} />
-      <ProductForm
-        addProduct={addProduct}
-        categories={categories}
-        setCategories={setCategories}
-        stores={stores}
-        setStores={setStores}
-      />
+      <Routes>
+        <Route path="/" element={<Layout />} >
+            <Route
+            index
+            element={<Home products={products} deleteProduct={deleteProduct} />}
+          />
+          <Route
+            path="add"
+            element={
+              <ProductForm
+                addProduct={addProduct}
+                mode="add"
+                categories={categories}
+                setCategories={setCategories}
+                stores={stores}
+                setStores={setStores}
+                products={products}
+              />
+            }
+          />
+          <Route
+            path="edit/:id"
+            element={
+              <ProductForm
+                products={products}
+                mode="edit"
+                editProduct={editProduct}
+                categories={categories}
+                setCategories={setCategories}
+                stores={stores}
+                setStores={setStores}
+              />
+            }
+          />
+        </Route>
+      </Routes>
     </>
   );
 }
