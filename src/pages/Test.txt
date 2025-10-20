@@ -1,0 +1,164 @@
+import { useMemo, useState } from 'react';
+import ProductCard from '../feature/ProductCard';
+import Search from '../feature/Search';
+import styles from './Home.module.css';
+import { Link } from 'react-router-dom';
+
+function Home({ products, deleteProduct, editProduct, categories }) {
+  const [searchResult, setSearchResult] = useState(null);
+  const [query, setQuery] = useState('');
+
+  const [selectedCategory, setSelectedCategory] = useState("All")
+  
+
+
+
+  const [activeFilter, setActiveFilter] = useState({
+    type: 'All',
+    value: 'All',
+  });
+
+
+  const isSearching = searchResult !== null;
+
+  const displayProduct = useMemo(() => {
+    let result = products;
+
+    if (activeFilter.type === 'category' && activeFilter.value !== 'All') {
+      result = result.filter(
+        (product) => product.category === activeFilter.value
+      );
+    }
+
+    if (activeFilter.type === 'store' && activeFilter.value !== 'All') {
+      result = result.filter((product) => product.store === activeFilter.value);
+    }
+
+    return result;
+  }, [products, activeFilter]);
+
+  const filteredProduct = isSearching ? searchResult : displayProduct;
+
+  // search function
+  function handleSearch(searchQuery) {
+    setQuery(searchQuery);
+    const searchWord = searchQuery.toLowerCase().trim();
+
+    if (searchWord === '') {
+      setSearchResult(null);
+      return;
+    }
+
+    // search based on filted result
+    const listToSearch = displayProduct;
+
+    if (listToSearch.length === 0) {
+      setSearchResult([]);
+      return;
+    }
+    const allKeys = products.length > 0 ? Object.keys(products[0]) : [];
+    const excludedKeys = ['id', 'img'];
+    const searchableKeys = allKeys.filter((key) => !excludedKeys.includes(key));
+    const newSearch = listToSearch.filter((product) => {
+      return searchableKeys.some((key) => {
+        return String(product[key]).toLowerCase().includes(searchWord);
+      });
+    });
+
+    setSearchResult(newSearch);
+  }
+
+  function handleShowAll() {
+    setActiveFilter({ type: 'All', value: 'All' })
+    setSearchResult(null);
+    setQuery('');
+  }
+
+  function handleCancelSearch() {
+    setSearchResult(null);
+    setQuery('');
+  }
+
+  function handleFilter(type, value) {
+    setActiveFilter({ type, value });
+    setSearchResult(null);
+  }
+
+  return (
+    <div className={styles.homeContainer}>
+      <div className={styles.actionsContainer}>
+        <Search
+          query={query}
+          handleSearch={handleSearch}
+          handleCancelSearch={handleCancelSearch}
+          isSearching={isSearching}
+        />
+        <Link to={'/add'}>
+          <button>Add New Product</button>
+        </Link>
+      </div>
+      <div>
+        <button onClick={handleShowAll}>All</button>
+        {categories.map((category) => (
+          <button
+            onClick={() => handleFilter('category', category)}
+            key={category}
+          >
+            {category}
+          </button>
+        ))}
+      </div>
+      {isSearching && filteredProduct.length === 0 ? (
+        <div className={styles.noMatchContainer}>
+          <p>No products found matching your search criteria. </p>
+          <Link to={'/add'}>
+            <p>Add New Product</p>
+          </Link>
+        </div>
+      ) : (
+        <div className={styles.productContainer}>
+          {filteredProduct.map((product) => (
+            <ProductCard
+              product={product}
+              key={product.id}
+              deleteProduct={deleteProduct}
+              editProduct={editProduct}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default Home;
+
+
+ const [newCategoryInput, setNewCategoryInput] = useState('');
+  const [newStoreNameInput, setNewStoreNameInput] = useState('');
+
+  function handleAddCategory() {
+    const categoryName = newCategoryInput.trim();
+    if (categoryName.length === 0) {
+      return;
+    }
+
+    setCategories((prev) => [...prev, categoryName]);
+
+    setFormData((prevData) => ({ ...prevData, category: categoryName }));
+
+    setNewCategoryInput('');
+  }
+
+  function handleAddStore() {
+    const storeName = newStoreNameInput.trim();
+    if (storeName.length === 0) {
+      return;
+    }
+
+    setStores((prev) => [...prev, storeName]);
+
+    setFormData((prevData) => ({ ...prevData, store: storeName }));
+
+    setNewStoreNameInput('');
+  }

@@ -3,8 +3,9 @@ import styles from './ProductForm.module.css';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { storage } from '../../firebase';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getTodayDate, getDateFormatForForm } from '../utils';
+import { getTodayDate, getDateFormatForForm } from '../Utils/utils';
 import NewSelection from '../shared/NewSelection';
+import { useNewSelection } from '../Utils/useNewSelection';
 
 const ProductForm = ({
   addProduct,
@@ -109,34 +110,25 @@ const ProductForm = ({
     navigate('/');
   }
 
-  const [newCategoryInput, setNewCategoryInput] = useState('');
-  const [newStoreNameInput, setNewStoreNameInput] = useState('');
+  const {
+    typeList: categoryOptions,
+    newValue: newCategoryInput,
+    setNewValue: setNewCategoryInput,
+    handleAdd: handleAddCategory,
+  } = useNewSelection(
+    'category',
+    categories,
+    setCategories,
+    setFormData,
+    'category'
+  );
 
-  function handleAddCategory() {
-    const categoryName = newCategoryInput.trim();
-    if (categoryName.length === 0) {
-      return;
-    }
-
-    setCategories((prev) => [...prev, categoryName]);
-
-    setFormData((prevData) => ({ ...prevData, category: categoryName }));
-
-    setNewCategoryInput('');
-  }
-
-  function handleAddStore() {
-    const storeName = newStoreNameInput.trim();
-    if (storeName.length === 0) {
-      return;
-    }
-
-    setStores((prev) => [...prev, storeName]);
-
-    setFormData((prevData) => ({ ...prevData, store: storeName }));
-
-    setNewStoreNameInput('');
-  }
+  const {
+    typeList: storeOptions,
+    newValue: newStoreInput,
+    setNewValue: setNewStoreInput,
+    handleAdd: handleAddStore,
+  } = useNewSelection('store', stores, setStores, setFormData, 'store');
 
   return (
     <div className={styles.addNewProduct}>
@@ -174,7 +166,7 @@ const ProductForm = ({
             onChange={handleChange}
           >
             <option value=""></option>
-            {stores.map((store, index) => (
+            {storeOptions.map((store, index) => (
               <option value={store} key={index}>
                 {store}
               </option>
@@ -185,8 +177,8 @@ const ProductForm = ({
         {formData.store === 'NEW_STORE' && (
           <NewSelection
             type="Store"
-            newSelectionInput={newStoreNameInput}
-            setNewSelectionInput={setNewStoreNameInput}
+            newSelectionInput={newStoreInput}
+            setNewSelectionInput={setNewStoreInput}
             handleAddSelection={handleAddStore}
           />
         )}
@@ -199,7 +191,7 @@ const ProductForm = ({
             onChange={handleChange}
           >
             <option value=""></option>
-            {categories.map((category, index) => (
+            {categoryOptions.map((category, index) => (
               <option value={category} key={index}>
                 {category}
               </option>

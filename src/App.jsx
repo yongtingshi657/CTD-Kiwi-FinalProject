@@ -13,7 +13,7 @@ import {
   doc,
   updateDoc,
 } from 'firebase/firestore';
-import { getDateForDBFormat } from './utils';
+import { getDateForDBFormat } from './Utils/utils';
 import Layout from './shared/Layout';
 import ProductDetail from './pages/ProductDetail';
 
@@ -89,7 +89,14 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route
             index
-            element={<Home products={products} deleteProduct={deleteProduct} />}
+            element={
+              <Home
+                products={products}
+                deleteProduct={deleteProduct}
+                categories={categories}
+                stores={stores}
+              />
+            }
           />
           <Route
             path="add"
@@ -119,7 +126,15 @@ function App() {
               />
             }
           />
-          <Route path="product/:id" element={<ProductDetail products={products}deleteProduct={deleteProduct}/>} />
+          <Route
+            path="product/:id"
+            element={
+              <ProductDetail
+                products={products}
+                deleteProduct={deleteProduct}
+              />
+            }
+          />
         </Route>
       </Routes>
     </>
