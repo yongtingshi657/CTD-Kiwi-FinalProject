@@ -1,15 +1,9 @@
 import { FaSearch, FaTimes } from 'react-icons/fa';
 import Styles from './Search.module.css';
-import { useRef } from 'react';
 
-function Search({ handleSearch, isSearching, handleCancelSearch }) {
-  const inputRef = useRef(null);
+function Search({ handleSearch, isSearching, handleCancelSearch, query }) {
 
   function handleCancel(){
-    if (inputRef.current) {
-      inputRef.current.value = '';
-  }
- 
   handleCancelSearch()
 
 }
@@ -21,8 +15,8 @@ function Search({ handleSearch, isSearching, handleCancelSearch }) {
       <input
         className={Styles.searchInput}
         placeholder="Type to Search"
-        onChange={handleSearch}
-        ref={inputRef}
+        onChange={(e) => handleSearch(e.target.value)}
+        value={query}
       />
       {isSearching && <FaTimes className={Styles.cancelIcon} onClick={handleCancel}/>}
     </div>
