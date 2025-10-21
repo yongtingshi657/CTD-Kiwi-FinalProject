@@ -1,0 +1,50 @@
+.filterRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 20px;
+  padding: 15px 0;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 20px;
+}
+
+.filterButton {
+  background-color: #f0f0f0;
+  color: #555;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 8px 15px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  margin-right: 10px;
+}
+
+.active {
+  background-color: #b48a78;
+  color: white;
+  border-color: #9e7565;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.filterLabel {
+  font-weight: 600;
+  color: #555;
+  margin-right: 5px;
+}
+
+.filterSelect {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: white;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+@media (max-width: 767px) {
+  .filterButton {
+    margin-bottom: 10px;
+  }
+
+}

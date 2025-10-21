@@ -7,7 +7,7 @@ function Header() {
     <div className={styles.title}>My Product Tracker</div>
      <nav className={styles.nav}>
         <NavLink to="/" className={({ isActive }) => `${styles.navLink} ${isActive ? styles.active : ''}`}>Home</NavLink>
-        <NavLink to="/add" className={({ isActive }) => `${styles.navLink} ${isActive ? styles.active : ''}`}>Add Product</NavLink>
+        <NavLink to="/about" className={({ isActive }) => `${styles.navLink} ${isActive ? styles.active : ''}`}>About</NavLink>
     </nav>
    </header>
   )

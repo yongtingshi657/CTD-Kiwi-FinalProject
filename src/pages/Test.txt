@@ -162,3 +162,43 @@ export default Home;
 
     setNewStoreNameInput('');
   }
+
+
+  <div>
+          <button
+            onClick={handleShowAll}
+            className={`${styles.filterButton} ${
+              selectedCategory === 'All' && selectedStore === 'All'
+                ? styles.active
+                : ''
+            }`}
+          >
+            All
+          </button>
+          {categories.map((category) => (
+            <button
+              key={category}
+              onClick={() => handleFilter('category', category)}
+              className={`${styles.filterButton} ${
+                selectedCategory === category ? styles.active : ''
+              }`}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
+        <div>
+          <label htmlFor="store-select">Filter by Store:</label>
+          <select
+            id="store-select"
+            value={selectedStore}
+            onChange={(e) => handleFilter('store', e.target.value)}
+          >
+            <option value="All">All Stores</option>
+            {stores.map((store) => (
+              <option key={store} value={store}>
+                {store}
+              </option>
+            ))}
+          </select>
+        </div>

@@ -6,16 +6,22 @@
   justify-content: center;
 }
 
+.actionSection {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
 .actionsContainer {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 15px 0;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .actionsContainer button {
-  background-color: #b48a78; 
+  background-color: #b48a78;
   color: white;
   border: 1px solid #9e7565;
   border-radius: 8px;
@@ -36,6 +42,16 @@
   transform: translateY(0);
 }
 
+.filterRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 20px;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 20px;
+}
+
 .noMatchContainer {
   display: flex;
   flex-direction: column;
@@ -47,7 +63,6 @@
   border-radius: 10px;
   border: 1px dashed #ccc;
 }
-
 .noMatchContainer p {
   font-size: 1.2em;
   color: #555;
@@ -64,49 +79,20 @@
   border-bottom: 1px solid #b48a78;
 }
 
-
-.filterRow {
+.loadingContainer {
   display: flex;
-  flex-wrap: wrap; 
+  flex-direction: column;
   align-items: center;
-  gap: 20px; 
-  padding: 15px 0;
-  border-bottom: 1px solid #eee;
-  margin-bottom: 20px;
-}
+  justify-content: center;
+  height: 250px;
+  margin-top: 30px;
 
-.filterButton{
-  background-color: #f0f0f0;
-  color: #555;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  padding: 8px 15px;
-  font-size: 0.95rem;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  margin-right: 10px;
-}
-
-.active {
-  background-color: #b48a78 !important;
-  color: white;
-  border-color: #9e7565;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.filterRow label {
-    font-weight: 600;
-    color: #555;
-    margin-right: 5px;
-}
-
-.filterRow select {
-  padding: 8px 12px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  background-color: white;
-  font-size: 0.95rem;
-  cursor: pointer;
+  background-color: #f7f7f7;
+  border-radius: 10px;
+  color: #777;
+  font-size: 1.1rem;
+  font-weight: 500;
+  border: 1px dashed #ddd;
 }
 /* phone */
 
@@ -116,24 +102,24 @@
     padding: 10px;
   }
 
-.actionsContainer {
-    justify-content: center;
-    flex-wrap: wrap; 
-    gap: 10px; 
+  .actionsContainer {
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 10px;
     padding: 10px 0;
-    margin-bottom: 15px;
+    margin-bottom: 0px;
   }
-
 
   .productContainer {
-    grid-template-columns: 1fr 1fr; 
-    gap: 10px; 
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
   }
 
-  .filterButton{
- margin-bottom: 10px;
+  .filterRow {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .filterButton {
+    margin-bottom: 10px;
+  }
 }
-}
-
-
-

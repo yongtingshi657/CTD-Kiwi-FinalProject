@@ -10,19 +10,34 @@ export function getDateForDBFormat(formData) {
   // database date (MM/DD/YYYY)
   const inputDateString = formData.date;
   const [year, month, day] = inputDateString.split('-');
-  return`${month}/${day}/${year}`;
+  return `${month}/${day}/${year}`;
 }
 
-
-  export function getDateFormatForForm(databaseDate) {
-    // database date (MM/DD/YYYY) to the form date (YYYY-MM-DD).
-    if (databaseDate && databaseDate.includes('-')) {
-        return databaseDate; // Already in YYYY-MM-DD
-    }
-    if (databaseDate && databaseDate.includes('/')) {
-        const [month, day, year] = databaseDate.split('/');
-        return `${year}-${month}-${day}`;
-    }
-    return '';
-   
+export function getDateFormatForForm(databaseDate) {
+  // database date (MM/DD/YYYY) to the form date (YYYY-MM-DD).
+  if (databaseDate && databaseDate.includes('-')) {
+    return databaseDate; // Already in YYYY-MM-DD
   }
+  if (databaseDate && databaseDate.includes('/')) {
+    const [month, day, year] = databaseDate.split('/');
+    return `${year}-${month}-${day}`;
+  }
+  return '';
+}
+
+export function formValidation(formData){
+  const missingFields = [];
+    
+    if (formData.name.trim().length === 0) {
+      missingFields.push('Product Name');
+    }
+    if (formData.category === '' || formData.category === null) {
+      missingFields.push('Category');
+    }
+    if (formData.store === '' || formData.store === null) {
+      missingFields.push('Store');
+    }
+    
+
+  return missingFields
+}
