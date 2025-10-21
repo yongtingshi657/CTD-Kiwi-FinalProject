@@ -12,35 +12,55 @@ import {
   deleteDoc,
   doc,
   updateDoc,
+  orderBy,
+  query
 } from 'firebase/firestore';
 import { getDateForDBFormat } from './Utils/utils';
 import Layout from './shared/Layout';
 import ProductDetail from './pages/ProductDetail';
+import About from './pages/About';
+import NotFound from './pages/NotFound';
 
 function App() {
   const [products, setProducts] = useState([]);
   const productsCollection = 'products';
 
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState('');
+
   useEffect(() => {
+    setErrorMessage(null);
+
+    const productsQuery = query(
+        collection(db, 'products'),
+        orderBy('timestamp', 'desc') 
+    );
+    
     const unsubscribe = onSnapshot(
-      collection(db, 'products'),
+      productsQuery,
       (querySnapshot) => {
         const productsArray = querySnapshot.docs.map((doc) => ({
           ...doc.data(),
           id: doc.id,
         }));
+        setErrorMessage(null);
         setProducts(productsArray);
+        setIsLoading(false); 
       },
 
       (error) => {
         console.error('Error fetching real-time data: ', error);
+        setErrorMessage(`Error fetching real-time data - ${error.message}`);
+        setIsLoading(false);
       }
     );
+
     return () => unsubscribe();
+    ;
   }, []);
 
-  const [categories, setCategories] = useState(['Food', 'Snack', 'Drink']);
-  const [stores, setStores] = useState(['Walmart', "Trader Joe's", 'Costco']);
+  const [categories, setCategories] = useState(['Food', 'Snack', 'Drink','House']);
+  const [stores, setStores] = useState(['Walmart', "Trader Joe's", 'Costco','Target']);
 
   async function addProduct(formData) {
     const formattedDate = getDateForDBFormat(formData);
@@ -56,18 +76,32 @@ function App() {
         collection(db, productsCollection),
         newProduct
       );
-      console.log('Document written with ID: ', docRef.id);
-    } catch (e) {
-      console.error('Error adding document: ', e);
+
+      return {
+        success: true,
+        id: docRef.id,
+        message: 'Product added successfully!',
+      };
+    } catch (error) {
+      const errorMessage = error.message || 'Firebase failed to save the product.'
+      console.error('Firebase addProduct Error:', error);
+      throw new Error(`Failed to save product - ${errorMessage}`);
     }
   }
 
   async function deleteProduct(id) {
+    const isConfirmed = window.confirm(
+        'Are you sure you want to permanently delete this product?'
+    );
+    if (!isConfirmed) {
+        console.log('Deletion cancelled by user.');
+        return;
+    }
     try {
       await deleteDoc(doc(db, productsCollection, id));
       console.log(`Successfully deleted document with ID: ${id}`);
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      setErrorMessage(`Error deleting document: ${error.message}`);
     }
   }
 
@@ -79,9 +113,15 @@ function App() {
         ...product,
       });
     } catch (error) {
-      console.error('Error updating document: ', error);
+      const errorMessage = error.message || 'Firebase failed to save the product'
+      console.error('Firebase editProduct Error:', error);
+      throw new Error(`Error updating document - ${errorMessage}`);
     }
   }
+
+  const handleDismissError = () => {
+    setErrorMessage(null);
+  };
 
   return (
     <>
@@ -91,13 +131,18 @@ function App() {
             index
             element={
               <Home
+                isLoading={isLoading}
+                errorMessage={errorMessage}
                 products={products}
                 deleteProduct={deleteProduct}
                 categories={categories}
                 stores={stores}
+                handleDismissError={handleDismissError}
               />
             }
           />
+          <Route path='about' element={<About />}/>
+          <Route path='*' element={<NotFound />}/>
           <Route
             path="add"
             element={

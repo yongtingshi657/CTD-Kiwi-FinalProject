@@ -76,7 +76,7 @@
 
 @media (max-width: 768px) {
   .productCard {
-    min-height: 300px; 
+    max-height: 360px; 
   }
  
   .imageContainer {

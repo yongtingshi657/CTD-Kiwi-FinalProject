@@ -1,10 +1,21 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import ProductCard from '../feature/ProductCard';
 import Search from '../feature/Search';
 import styles from './Home.module.css';
 import { Link } from 'react-router-dom';
+import ErrorContainer from '../shared/ErrorContainer';
+import Filter from '../feature/Filter';
 
-function Home({ products, deleteProduct, editProduct, categories, stores }) {
+function Home({
+  products,
+  deleteProduct,
+  editProduct,
+  categories,
+  stores,
+  isLoading,
+  errorMessage,
+  handleDismissError
+}) {
   const [searchResult, setSearchResult] = useState(null);
   const [query, setQuery] = useState('');
 
@@ -51,7 +62,8 @@ function Home({ products, deleteProduct, editProduct, categories, stores }) {
   }, [products, selectedCategory, selectedStore]);
 
   const isSearching = searchResult !== null;
-  const isFiltering = selectedCategory !== 'All' || selectedStore !== 'All';
+  const isFiltering =
+    !isSearching && (selectedCategory !== 'All' || selectedStore !== 'All');
 
   const displayProducts = isSearching ? searchResult : filteredProducts;
 
@@ -59,7 +71,7 @@ function Home({ products, deleteProduct, editProduct, categories, stores }) {
   const filterNotFound = isFiltering && displayProducts.length === 0;
 
   // search function
-  function handleSearch(searchQuery) {
+  const handleSearch = useCallback((searchQuery) => {
     setQuery(searchQuery);
     const searchWord = searchQuery.toLowerCase().trim();
 
@@ -74,7 +86,7 @@ function Home({ products, deleteProduct, editProduct, categories, stores }) {
       setSearchResult([]);
       return;
     }
-    const allKeys = products.length > 0 ? Object.keys(products[0]) : [];
+    const allKeys = listToSearch.length > 0 ? Object.keys(listToSearch[0]) : [];
     const excludedKeys = ['id', 'img'];
     const searchableKeys = allKeys.filter((key) => !excludedKeys.includes(key));
     const newSearch = listToSearch.filter((product) => {
@@ -83,7 +95,7 @@ function Home({ products, deleteProduct, editProduct, categories, stores }) {
       });
     });
     setSearchResult(newSearch);
-  }
+  }, [filteredProducts])
 
   function handleShowAll() {
     setSelectedCategory('All');
@@ -97,8 +109,22 @@ function Home({ products, deleteProduct, editProduct, categories, stores }) {
     setQuery('');
   }
 
+
+  if (isLoading) {
+    return <div className={styles.loadingContainer}>Loading Products...</div>;
+  }
+
+  if (errorMessage) {
+    return (
+      <ErrorContainer onDismiss={handleDismissError}>
+        {errorMessage}
+      </ErrorContainer>
+    );
+  }
+
   return (
     <div className={styles.homeContainer}>
+      <section className={styles.actionSection}>
       <div className={styles.actionsContainer}>
         <Search
           query={query}
@@ -111,34 +137,16 @@ function Home({ products, deleteProduct, editProduct, categories, stores }) {
         </Link>
       </div>
       <div className={styles.filterRow}>
-        <div>
-          <button onClick={handleShowAll} className={`${styles.filterButton} ${selectedCategory === 'All' && selectedStore === 'All' ? styles.active : ''}`} >All</button>
-          {categories.map((category) => (
-            <button
-              key={category}
-              onClick={() => handleFilter('category', category)}
-              className={`${styles.filterButton} ${selectedCategory === category ? styles.active : ''}`} 
-            >
-              {category}
-            </button>
-          ))}
-        </div>
-        <div>
-          <label htmlFor="store-select">Filter by Store:</label>
-          <select
-            id="store-select"
-            value={selectedStore}
-            onChange={(e) => handleFilter('store', e.target.value)}
-          >
-            <option value="All">All Stores</option>
-            {stores.map((store) => (
-              <option key={store} value={store}>
-                {store}
-              </option>
-            ))}
-          </select>
-        </div>
+        <Filter 
+        handleFilter={handleFilter}
+        selectedCategory={selectedCategory}
+        selectedStore={selectedStore}
+        categories={categories}
+        stores={stores}
+        handleShowAll={handleShowAll}
+        />
       </div>
+      </section>
       {searchNotFound || filterNotFound ? (
         <div className={styles.noMatchContainer}>
           <p>No products found matching your search criteria. </p>

@@ -3,9 +3,14 @@ import styles from './ProductForm.module.css';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { storage } from '../../firebase';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getTodayDate, getDateFormatForForm } from '../Utils/utils';
+import {
+  getTodayDate,
+  getDateFormatForForm,
+  formValidation,
+} from '../Utils/utils';
 import NewSelection from '../shared/NewSelection';
 import { useNewSelection } from '../Utils/useNewSelection';
+import ErrorContainer from '../shared/ErrorContainer';
 
 const ProductForm = ({
   addProduct,
@@ -17,11 +22,14 @@ const ProductForm = ({
   mode,
   editProduct,
 }) => {
+
   // update
   const { id } = useParams();
   const productToEdit = products.find((product) => product.id === id);
 
   const navigate = useNavigate();
+
+  const [formError, setFormError] = useState('');
 
   const defaultNewProductData = {
     name: '',
@@ -70,7 +78,8 @@ const ProductForm = ({
           }
         },
         (error) => {
-          console.log(error);
+          console.error('Firebase Storage Upload Error:', error); 
+          alert(`Image upload failed: ${error.message}`); 
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
@@ -88,26 +97,42 @@ const ProductForm = ({
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
 
-    if (
-      formData.name.trim().length === 0 ||
-      formData.category === '' ||
-      formData.store === ''
-    ) {
-      alert('Please fill in the Product name and select a store and category');
+    const formValidationResult = formValidation(formData);
+
+    if (formValidationResult.length > 0) {
+      alert(
+        `Please fill in the following required fields: \n\n- ${formValidationResult.join(
+          '\n- '
+        )}`
+      );
       return;
     }
 
-    if (mode === 'edit' && productToEdit) {
-      editProduct(formData);
-    } else {
-      addProduct(formData);
-      setFormData(defaultNewProductData);
+    setFormError("");
+
+    try {
+      let result;
+      if (mode === 'edit' && productToEdit) {
+        await editProduct(formData);
+        result = { message: 'Product updated successfully!' }
+      } else {
+        await addProduct(formData);
+        setFormData(defaultNewProductData);
+        result = await addProduct(formData);
+      }
+
+     if (result && result.message) {
+        alert(result.message); 
     }
 
-    navigate('/');
+      navigate('/');
+    } catch (error) {
+      console.log('Error caught in handleSubmit:', error);
+      setFormError(`Submission failed: ${error.message}` );
+    }
   }
 
   const {
@@ -130,116 +155,130 @@ const ProductForm = ({
     handleAdd: handleAddStore,
   } = useNewSelection('store', stores, setStores, setFormData, 'store');
 
+  const handleDismissError = () => {
+    setFormError(null);
+  };
+
+  const modeDisplay = mode.charAt(0).toUpperCase() + mode.slice(1);
+
   return (
-    <div className={styles.addNewProduct}>
-      <h2>{mode.charAt(0).toUpperCase() + mode.slice(1)} Your Favorite</h2>
-      <form onSubmit={handleSubmit}>
-        <div className={styles.formGroup}>
-          <label htmlFor="name">Product Name</label>
-          <input
-            id="name"
-            name="name"
-            type="text"
-            placeholder="Product Name"
-            value={formData.name}
-            onChange={handleChange}
-          />
-        </div>
+    <>
+      { formError && (
+        <ErrorContainer onDismiss={handleDismissError}>
+          {formError}
+        </ErrorContainer>
+      )}
 
-        <div className={styles.formGroup}>
-          <label htmlFor="date">Date</label>
-          <input
-            id="date"
-            name="date"
-            type="date"
-            value={formData.date}
-            onChange={handleChange}
-          />
-        </div>
+      <div className={styles.addNewProduct}>
+        <h2>{modeDisplay} Your Favorite</h2>
+        <form onSubmit={handleSubmit}>
+          <div className={styles.formGroup}>
+            <label htmlFor="name">Product Name</label>
+            <input
+              id="name"
+              name="name"
+              type="text"
+              placeholder="Product Name"
+              value={formData.name}
+              onChange={handleChange}
+            />
+          </div>
 
-        <div className={styles.formGroup}>
-          <label htmlFor="store">Store</label>
-          <select
-            id="store"
-            name="store"
-            value={formData.store}
-            onChange={handleChange}
-          >
-            <option value=""></option>
-            {storeOptions.map((store, index) => (
-              <option value={store} key={index}>
-                {store}
-              </option>
-            ))}
-            <option value="NEW_STORE">-- Add New Store --</option>
-          </select>
-        </div>
-        {formData.store === 'NEW_STORE' && (
-          <NewSelection
-            type="Store"
-            newSelectionInput={newStoreInput}
-            setNewSelectionInput={setNewStoreInput}
-            handleAddSelection={handleAddStore}
-          />
-        )}
-        <div className={styles.formGroup}>
-          <label htmlFor="category">Category</label>
-          <select
-            id="category"
-            name="category"
-            value={formData.category}
-            onChange={handleChange}
-          >
-            <option value=""></option>
-            {categoryOptions.map((category, index) => (
-              <option value={category} key={index}>
-                {category}
-              </option>
-            ))}
-            <option value="NEW_CATEGORY">-- Add New Category --</option>
-          </select>
-        </div>
-        {formData.category === 'NEW_CATEGORY' && (
-          <NewSelection
-            type="Category"
-            newSelectionInput={newCategoryInput}
-            setNewSelectionInput={setNewCategoryInput}
-            handleAddSelection={handleAddCategory}
-          />
-        )}
+          <div className={styles.formGroup}>
+            <label htmlFor="date">Date</label>
+            <input
+              id="date"
+              name="date"
+              type="date"
+              value={formData.date}
+              onChange={handleChange}
+            />
+          </div>
 
-        <div className={styles.formGroup}>
-          <label htmlFor="image">Image </label>
-          <input
-            id="image"
-            type="file"
-            name="image"
-            onChange={(e) => {
-              setFile(e.target.files[0]);
-            }}
-          />
-        </div>
+          <div className={styles.formGroup}>
+            <label htmlFor="store">Store</label>
+            <select
+              id="store"
+              name="store"
+              value={formData.store}
+              onChange={handleChange}
+            >
+              <option value=""></option>
+              {storeOptions.map((store, index) => (
+                <option value={store} key={index}>
+                  {store}
+                </option>
+              ))}
+              <option value="NEW_STORE">-- Add New Store --</option>
+            </select>
+          </div>
+          {formData.store === 'NEW_STORE' && (
+            <NewSelection
+              type="Store"
+              newSelectionInput={newStoreInput}
+              setNewSelectionInput={setNewStoreInput}
+              handleAddSelection={handleAddStore}
+            />
+          )}
+          <div className={styles.formGroup}>
+            <label htmlFor="category">Category</label>
+            <select
+              id="category"
+              name="category"
+              value={formData.category}
+              onChange={handleChange}
+            >
+              <option value=""></option>
+              {categoryOptions.map((category, index) => (
+                <option value={category} key={index}>
+                  {category}
+                </option>
+              ))}
+              <option value="NEW_CATEGORY">-- Add New Category --</option>
+            </select>
+          </div>
+          {formData.category === 'NEW_CATEGORY' && (
+            <NewSelection
+              type="Category"
+              newSelectionInput={newCategoryInput}
+              setNewSelectionInput={setNewCategoryInput}
+              handleAddSelection={handleAddCategory}
+            />
+          )}
 
-        <div className={styles.formGroup}>
-          <label htmlFor="note">Note</label>
-          <textarea
-            id="note"
-            name="note"
-            value={formData.note}
-            onChange={handleChange}
-          />
-        </div>
-        <div className={styles.formActions}>
-          <button
-            className={styles.addNewButton}
-            type="submit"
-            disabled={percentage !== null && percentage < 100}
-          >
-            {mode.charAt(0).toUpperCase() + mode.slice(1)} New Product
-          </button>
-        </div>
-      </form>
-    </div>
+          <div className={styles.formGroup}>
+            <label htmlFor="image">Image </label>
+            <input
+              id="image"
+              type="file"
+              name="image"
+              onChange={(e) => {
+                setFile(e.target.files[0]);
+              }}
+            />
+          </div>
+
+          <div className={styles.formGroup}>
+            <label htmlFor="note">Note</label>
+            <textarea
+              id="note"
+              name="note"
+              value={formData.note}
+              onChange={handleChange}
+            />
+          </div>
+          <div className={styles.formActions}>
+            <button
+              className={styles.addNewButton}
+              type="submit"
+              disabled={percentage !== null && percentage < 100}
+            >
+              {modeDisplay} New Product
+            </button>
+          </div>
+        </form>
+      </div>
+    </>
   );
 };
 
