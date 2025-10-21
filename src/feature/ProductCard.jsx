@@ -1,7 +1,7 @@
 import styles from './ProductCard.module.css';
 import { FaTrashAlt } from 'react-icons/fa';
 import { MdEdit } from 'react-icons/md';
-import Mango from '/TraderJoesMango.JPG';
+import defaultImage from '../assets/defaultImage.png';
 import { Link, useNavigate } from 'react-router-dom';
 
 function ProductCard({ product, deleteProduct }) {
@@ -34,7 +34,7 @@ function ProductCard({ product, deleteProduct }) {
                 alt={product.name}
               />
             ) : (
-              <img src={Mango} className={styles.productImage} />
+              <img src={defaultImage} className={styles.productImage} />
             )}
             <div className={styles.productActions}>
               <MdEdit onClick={handleEditClick} />

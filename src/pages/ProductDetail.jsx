@@ -52,7 +52,7 @@ function ProductDetail({ products, deleteProduct }) {
         </div>
         
         <div className={styles.cardContent}>
-          <h3>{product.name}</h3>
+          <h2>{product.name}</h2>
           <p>Store: {product.store}</p>
           <p>Date: {product.date}</p>
           <p>Category: {product.category}</p>
