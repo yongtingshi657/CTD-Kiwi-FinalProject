@@ -1,11 +1,10 @@
-.filterRow {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 20px;
-  padding: 15px 0;
-  border-bottom: 1px solid #eee;
-  margin-bottom: 20px;
+.filterDiv{
+    display: flex;
+    padding: 5px 0;
+    align-items: center;
+    align-self: center;
+    justify-content: center;
+    flex-wrap: wrap;
 }
 
 .filterButton {
@@ -18,6 +17,8 @@
   cursor: pointer;
   transition: all 0.2s ease-in-out;
   margin-right: 10px;
+  display: inline-block;
+  align-self: center;
 }
 
 .active {
@@ -47,4 +48,7 @@
     margin-bottom: 10px;
   }
 
+  .filterDiv{
+    padding: 2px;
+}
 }

@@ -10,7 +10,7 @@ function Filter({
 }) {
   return (
     <>
-      <div>
+      <div className={styles.filterDiv}>
         <button
           onClick={handleShowAll}
           className={`${styles.filterButton} ${
@@ -33,7 +33,7 @@ function Filter({
           </button>
         ))}
       </div>
-      <div>
+      <div className={styles.filterDiv}>
         <label className={styles.filterLabel}htmlFor="store-select">Filter by Store:</label>
         <select
          className={styles.filterSelect}

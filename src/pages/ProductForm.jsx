@@ -11,6 +11,7 @@ import {
 import NewSelection from '../shared/NewSelection';
 import { useNewSelection } from '../Utils/useNewSelection';
 import ErrorContainer from '../shared/ErrorContainer';
+import SuccessContainer from '../shared/SuccessContainer';
 
 const ProductForm = ({
   addProduct,
@@ -22,7 +23,6 @@ const ProductForm = ({
   mode,
   editProduct,
 }) => {
-
   // update
   const { id } = useParams();
   const productToEdit = products.find((product) => product.id === id);
@@ -30,6 +30,7 @@ const ProductForm = ({
   const navigate = useNavigate();
 
   const [formError, setFormError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   const defaultNewProductData = {
     name: '',
@@ -78,8 +79,8 @@ const ProductForm = ({
           }
         },
         (error) => {
-          console.error('Firebase Storage Upload Error:', error); 
-          alert(`Image upload failed: ${error.message}`); 
+          console.error('Firebase Storage Upload Error:', error);
+          alert(`Image upload failed: ${error.message}`);
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
@@ -111,27 +112,29 @@ const ProductForm = ({
       return;
     }
 
-    setFormError("");
+    setFormError('');
 
     try {
       let result;
       if (mode === 'edit' && productToEdit) {
         await editProduct(formData);
-        result = { message: 'Product updated successfully!' }
+        result = { message: 'Product updated successfully!' };
       } else {
         await addProduct(formData);
         setFormData(defaultNewProductData);
-        result = await addProduct(formData);
+        result = { message: 'Product added successfully!' };
       }
 
-     if (result && result.message) {
-        alert(result.message); 
-    }
+      if (result && result.message) {
+        setSuccessMessage(result.message);
 
-      navigate('/');
+        setTimeout(() => {
+          navigate('/');
+        }, 2000);
+      }
     } catch (error) {
       console.log('Error caught in handleSubmit:', error);
-      setFormError(`Submission failed: ${error.message}` );
+      setFormError(`Submission failed: ${error.message}`);
     }
   }
 
@@ -163,11 +166,13 @@ const ProductForm = ({
 
   return (
     <>
-      { formError && (
+      {formError && (
         <ErrorContainer onDismiss={handleDismissError}>
           {formError}
         </ErrorContainer>
       )}
+
+      {successMessage && <SuccessContainer>{successMessage}</SuccessContainer>}
 
       <div className={styles.addNewProduct}>
         <h2>{modeDisplay} Your Favorite</h2>

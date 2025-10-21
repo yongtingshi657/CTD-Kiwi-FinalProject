@@ -17,7 +17,6 @@
   justify-content: space-between;
   align-items: center;
   padding: 15px 0;
-  margin-bottom: 10px;
 }
 
 .actionsContainer button {
@@ -46,10 +45,10 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 20px;
   padding: 10px 0;
   border-bottom: 1px solid #eee;
-  margin-bottom: 20px;
+  gap: 10px;
+
 }
 
 .noMatchContainer {
@@ -118,8 +117,13 @@
   .filterRow {
     justify-content: center;
     flex-wrap: wrap;
+    gap: 0px;
   }
   .filterButton {
     margin-bottom: 10px;
   }
+
+  .actionSection {
+  justify-content: center;
+}
 }
