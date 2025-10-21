@@ -16,36 +16,57 @@ For UI and Styling
 * react-icon
 
 Data and Backend
-* firebaseis used to provide the backend infrastructure for data storage and file uploads.
+* firebase is used to provide the backend infrastructure for data storage and file uploads.
 
 ## Installation and Local Setup
 Follow these steps to get a local copy of the project running on your development machine.
 
 Steps
 1. Clone the Repository:
-git clone 
-cd my-goodbuy
+   ```bash
+    git clone 
+    cd my-goodbuy
+   ```
 
-2. Install Dependencies
+
+3. Install Dependencies
+```bash
 npm install
+```
 
-3. Configure Firebase Credentials: (See API Connection details below.)
+4. Configure Firebase Credentials: (See API Connection details below.)
 
-4. Run the Application:
+5. Run the Application:
+```bash
 npm start
+```
 
 ## API Connection and Credentials
 This application connects to Google Firebase for all backend services. You must create your own Firebase project in the Google Firebase Console to run the app locally and securely isolate your data.
 
+Firebase will provide a configuration and need to store it in a filre called firebase.js
+Replace the config with this for the security reason 
+```bash
+const firebaseConfig = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+};
+```
+
 Configuration (.env File)
 Create a file named .env in the root directory of the project and populate it with your unique project configuration:
-
+```bash
 REACT_APP_FIREBASE_API_KEY="YOUR_API_KEY"
 REACT_APP_FIREBASE_AUTH_DOMAIN="YOUR_AUTH_DOMAIN"
 REACT_APP_FIREBASE_PROJECT_ID="YOUR_PROJECT_ID"
 REACT_APP_FIREBASE_STORAGE_BUCKET="YOUR_STORAGE_BUCKET"
 REACT_APP_FIREBASE_MESSAGING_SENDER_ID="YOUR_MESSAGING_SENDER_ID"
 REACT_APP_FIREBASE_APP_ID="YOUR_APP_ID"
+```
 Security Note: Ensure your Firebase Security Rules are configured to allow data reads, writes, and image uploads from your development environment. Do not share your real API keys publicly.
 
 
