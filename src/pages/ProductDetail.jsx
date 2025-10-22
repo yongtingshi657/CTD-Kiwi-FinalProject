@@ -1,6 +1,6 @@
 import { FaTrashAlt } from 'react-icons/fa';
 import { MdEdit } from 'react-icons/md';
-import Mango from '/TraderJoesMango.JPG';
+import defaultImage from '../assets/defaultImage.png';
 import { useNavigate, useParams } from 'react-router-dom';
 import styles from './ProductDetail.module.css';
 
@@ -47,7 +47,7 @@ function ProductDetail({ products, deleteProduct }) {
               alt={product.name}
             />
           ) : (
-            <img src={Mango} className={styles.productImage} />
+            <img src={defaultImage} className={styles.productImage} />
           )}
         </div>
         
