@@ -1,0 +1,42 @@
+.loginDiv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  max-width: 600px;
+  margin: 50px auto 40px auto;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e0e0e0;
+}
+
+.loginForm {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  padding-bottom: 40px;
+}
+
+.loginForm input {
+  width: 250px;
+  height: 30px;
+  margin: 10px;
+}
+
+.loginForm button {
+  width: 200px;
+  margin-top: 20px;
+}
+
+.loginForm button :disabled {
+    background-color: grey;
+    cursor: not-allowed;
+}
+
+.loginForm span {
+    color: red;
+    font-size: 12px
+}

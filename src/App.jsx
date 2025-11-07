@@ -13,13 +13,15 @@ import {
   doc,
   updateDoc,
   orderBy,
-  query
+  query,
 } from 'firebase/firestore';
 import { getDateForDBFormat } from './Utils/utils';
 import Layout from './shared/Layout';
 import ProductDetail from './pages/ProductDetail';
 import About from './pages/About';
 import NotFound from './pages/NotFound';
+import Login from './pages/Login';
+import PrivateRoute from './feature/PrivateRoute';
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -32,10 +34,10 @@ function App() {
     setErrorMessage(null);
 
     const productsQuery = query(
-        collection(db, 'products'),
-        orderBy('timestamp', 'desc') 
+      collection(db, 'products'),
+      orderBy('timestamp', 'desc')
     );
-    
+
     const unsubscribe = onSnapshot(
       productsQuery,
       (querySnapshot) => {
@@ -45,7 +47,7 @@ function App() {
         }));
         setErrorMessage(null);
         setProducts(productsArray);
-        setIsLoading(false); 
+        setIsLoading(false);
       },
 
       (error) => {
@@ -56,11 +58,20 @@ function App() {
     );
 
     return () => unsubscribe();
-    ;
   }, []);
 
-  const [categories, setCategories] = useState(['Food', 'Snack', 'Drink','House']);
-  const [stores, setStores] = useState(['Walmart', "Trader Joe's", 'Costco','Target']);
+  const [categories, setCategories] = useState([
+    'Food',
+    'Snack',
+    'Drink',
+    'House',
+  ]);
+  const [stores, setStores] = useState([
+    'Walmart',
+    "Trader Joe's",
+    'Costco',
+    'Target',
+  ]);
 
   async function addProduct(formData) {
     const formattedDate = getDateForDBFormat(formData);
@@ -83,7 +94,8 @@ function App() {
         message: 'Product added successfully!',
       };
     } catch (error) {
-      const errorMessage = error.message || 'Firebase failed to save the product.'
+      const errorMessage =
+        error.message || 'Firebase failed to save the product.';
       console.error('Firebase addProduct Error:', error);
       throw new Error(`Failed to save product - ${errorMessage}`);
     }
@@ -91,11 +103,11 @@ function App() {
 
   async function deleteProduct(id) {
     const isConfirmed = window.confirm(
-        'Are you sure you want to permanently delete this product?'
+      'Are you sure you want to permanently delete this product?'
     );
     if (!isConfirmed) {
-        console.log('Deletion cancelled by user.');
-        return;
+      console.log('Deletion cancelled by user.');
+      return;
     }
     try {
       await deleteDoc(doc(db, productsCollection, id));
@@ -113,7 +125,8 @@ function App() {
         ...product,
       });
     } catch (error) {
-      const errorMessage = error.message || 'Firebase failed to save the product'
+      const errorMessage =
+        error.message || 'Firebase failed to save the product';
       console.error('Firebase editProduct Error:', error);
       throw new Error(`Error updating document - ${errorMessage}`);
     }
@@ -127,59 +140,64 @@ function App() {
     <>
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route
-            index
-            element={
-              <Home
-                isLoading={isLoading}
-                errorMessage={errorMessage}
-                products={products}
-                deleteProduct={deleteProduct}
-                categories={categories}
-                stores={stores}
-                handleDismissError={handleDismissError}
-              />
-            }
-          />
-          <Route path='about' element={<About />}/>
-          <Route path='*' element={<NotFound />}/>
-          <Route
-            path="add"
-            element={
-              <ProductForm
-                addProduct={addProduct}
-                mode="add"
-                categories={categories}
-                setCategories={setCategories}
-                stores={stores}
-                setStores={setStores}
-                products={products}
-              />
-            }
-          />
-          <Route
-            path="edit/:id"
-            element={
-              <ProductForm
-                products={products}
-                mode="edit"
-                editProduct={editProduct}
-                categories={categories}
-                setCategories={setCategories}
-                stores={stores}
-                setStores={setStores}
-              />
-            }
-          />
-          <Route
-            path="product/:id"
-            element={
-              <ProductDetail
-                products={products}
-                deleteProduct={deleteProduct}
-              />
-            }
-          />
+          <Route path="login" element={<Login />} />
+
+          <Route element={<PrivateRoute />}>
+            <Route
+              index
+              element={
+                <Home
+                  isLoading={isLoading}
+                  errorMessage={errorMessage}
+                  products={products}
+                  deleteProduct={deleteProduct}
+                  categories={categories}
+                  stores={stores}
+                  handleDismissError={handleDismissError}
+                />
+              }
+            />
+
+            <Route path="about" element={<About />} />
+            <Route path="*" element={<NotFound />} />
+            <Route
+              path="add"
+              element={
+                <ProductForm
+                  addProduct={addProduct}
+                  mode="add"
+                  categories={categories}
+                  setCategories={setCategories}
+                  stores={stores}
+                  setStores={setStores}
+                  products={products}
+                />
+              }
+            />
+            <Route
+              path="edit/:id"
+              element={
+                <ProductForm
+                  products={products}
+                  mode="edit"
+                  editProduct={editProduct}
+                  categories={categories}
+                  setCategories={setCategories}
+                  stores={stores}
+                  setStores={setStores}
+                />
+              }
+            />
+            <Route
+              path="product/:id"
+              element={
+                <ProductDetail
+                  products={products}
+                  deleteProduct={deleteProduct}
+                />
+              }
+            />
+          </Route>
         </Route>
       </Routes>
     </>
