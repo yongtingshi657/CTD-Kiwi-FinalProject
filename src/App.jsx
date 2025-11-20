@@ -60,19 +60,6 @@ function App() {
     return () => unsubscribe();
   }, []);
 
-  const [categories, setCategories] = useState([
-    'Food',
-    'Snack',
-    'Drink',
-    'House',
-  ]);
-  const [stores, setStores] = useState([
-    'Walmart',
-    "Trader Joe's",
-    'Costco',
-    'Target',
-  ]);
-
   async function addProduct(formData) {
     const formattedDate = getDateForDBFormat(formData);
 
@@ -151,8 +138,6 @@ function App() {
                   errorMessage={errorMessage}
                   products={products}
                   deleteProduct={deleteProduct}
-                  categories={categories}
-                  stores={stores}
                   handleDismissError={handleDismissError}
                 />
               }
@@ -166,10 +151,6 @@ function App() {
                 <ProductForm
                   addProduct={addProduct}
                   mode="add"
-                  categories={categories}
-                  setCategories={setCategories}
-                  stores={stores}
-                  setStores={setStores}
                   products={products}
                 />
               }
@@ -181,10 +162,6 @@ function App() {
                   products={products}
                   mode="edit"
                   editProduct={editProduct}
-                  categories={categories}
-                  setCategories={setCategories}
-                  stores={stores}
-                  setStores={setStores}
                 />
               }
             />

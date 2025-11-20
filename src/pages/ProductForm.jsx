@@ -12,17 +12,9 @@ import NewSelection from '../shared/NewSelection';
 import { useNewSelection } from '../Utils/useNewSelection';
 import ErrorContainer from '../shared/ErrorContainer';
 import SuccessContainer from '../shared/SuccessContainer';
+import { useLists } from '../context/ListContext.jsx';
 
-const ProductForm = ({
-  addProduct,
-  categories,
-  setCategories,
-  stores,
-  setStores,
-  products,
-  mode,
-  editProduct,
-}) => {
+const ProductForm = ({ addProduct, products, mode, editProduct }) => {
   // update
   const { id } = useParams();
   const productToEdit = products.find((product) => product.id === id);
@@ -31,6 +23,8 @@ const ProductForm = ({
 
   const [formError, setFormError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+
+  const { categories, setCategories, stores, setStores } = useLists();
 
   const defaultNewProductData = {
     name: '',
@@ -143,20 +137,14 @@ const ProductForm = ({
     newValue: newCategoryInput,
     setNewValue: setNewCategoryInput,
     handleAdd: handleAddCategory,
-  } = useNewSelection(
-    'category',
-    categories,
-    setCategories,
-    setFormData,
-    'category'
-  );
+  } = useNewSelection(categories, setCategories, setFormData, 'category');
 
   const {
     typeList: storeOptions,
     newValue: newStoreInput,
     setNewValue: setNewStoreInput,
     handleAdd: handleAddStore,
-  } = useNewSelection('store', stores, setStores, setFormData, 'store');
+  } = useNewSelection(stores, setStores, setFormData, 'store');
 
   const handleDismissError = () => {
     setFormError(null);
