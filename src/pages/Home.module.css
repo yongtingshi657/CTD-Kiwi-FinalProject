@@ -48,7 +48,7 @@
   padding: 10px 0;
   border-bottom: 1px solid #eee;
   gap: 10px;
-
+  justify-content: space-between;
 }
 
 .noMatchContainer {
@@ -85,7 +85,6 @@
   justify-content: center;
   height: 250px;
   margin-top: 30px;
-
   background-color: #f7f7f7;
   border-radius: 10px;
   color: #777;
@@ -93,6 +92,20 @@
   font-weight: 500;
   border: 1px dashed #ddd;
 }
+
+.addNewProductWrapper a {
+  text-decoration: none;
+  display: block;
+}
+
+.addTextBtn {
+  display: block;
+}
+
+.addIconBtn {
+  display: none;
+}
+
 /* phone */
 
 @media (max-width: 767px) {
@@ -124,6 +137,24 @@
   }
 
   .actionSection {
-  justify-content: center;
-}
+    justify-content: center;
+  }
+
+  .actionsContainer {
+    display: flex;
+    flex-wrap: nowrap;
+  }
+
+  .addTextBtn {
+    display: none;
+  }
+
+  .addIconBtn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 2rem !important;
+    padding: 3px !important;
+  }
 }

@@ -5,22 +5,34 @@ import styles from './Home.module.css';
 import { Link } from 'react-router-dom';
 import ErrorContainer from '../shared/ErrorContainer';
 import Filter from '../feature/Filter';
+import { useLists } from '../context/ListContext.jsx';
+import ManageFilterList from '../feature/ManageFilterList.jsx';
+import { MdOutlineAdd } from "react-icons/md";
 
 function Home({
   products,
   deleteProduct,
   editProduct,
-  categories,
-  stores,
   isLoading,
   errorMessage,
-  handleDismissError
+  handleDismissError,
 }) {
   const [searchResult, setSearchResult] = useState(null);
   const [query, setQuery] = useState('');
 
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedStore, setSelectedStore] = useState('All');
+
+  const { categories, stores } = useLists();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  function modalClose() {
+    setIsModalOpen(false);
+  }
+  function modalOpen() {
+    setIsModalOpen(true);
+  }
 
   function handleFilter(filterType, value) {
     if (filterType === 'category') {
@@ -71,31 +83,37 @@ function Home({
   const filterNotFound = isFiltering && displayProducts.length === 0;
 
   // search function
-  const handleSearch = useCallback((searchQuery) => {
-    setQuery(searchQuery);
-    const searchWord = searchQuery.toLowerCase().trim();
+  const handleSearch = useCallback(
+    (searchQuery) => {
+      setQuery(searchQuery);
+      const searchWord = searchQuery.toLowerCase().trim();
 
-    if (searchWord === '') {
-      setSearchResult(null);
-      return;
-    }
-    // search based on filted result
-    const listToSearch = filteredProducts;
+      if (searchWord === '') {
+        setSearchResult(null);
+        return;
+      }
+      // search based on filted result
+      const listToSearch = filteredProducts;
 
-    if (listToSearch.length === 0) {
-      setSearchResult([]);
-      return;
-    }
-    const allKeys = listToSearch.length > 0 ? Object.keys(listToSearch[0]) : [];
-    const excludedKeys = ['id', 'img'];
-    const searchableKeys = allKeys.filter((key) => !excludedKeys.includes(key));
-    const newSearch = listToSearch.filter((product) => {
-      return searchableKeys.some((key) => {
-        return String(product[key]).toLowerCase().includes(searchWord);
+      if (listToSearch.length === 0) {
+        setSearchResult([]);
+        return;
+      }
+      const allKeys =
+        listToSearch.length > 0 ? Object.keys(listToSearch[0]) : [];
+      const excludedKeys = ['id', 'img'];
+      const searchableKeys = allKeys.filter(
+        (key) => !excludedKeys.includes(key)
+      );
+      const newSearch = listToSearch.filter((product) => {
+        return searchableKeys.some((key) => {
+          return String(product[key]).toLowerCase().includes(searchWord);
+        });
       });
-    });
-    setSearchResult(newSearch);
-  }, [filteredProducts])
+      setSearchResult(newSearch);
+    },
+    [filteredProducts]
+  );
 
   function handleShowAll() {
     setSelectedCategory('All');
@@ -108,7 +126,6 @@ function Home({
     setSearchResult(null);
     setQuery('');
   }
-
 
   if (isLoading) {
     return <div className={styles.loadingContainer}>Loading Products...</div>;
@@ -125,27 +142,37 @@ function Home({
   return (
     <div className={styles.homeContainer}>
       <section className={styles.actionSection}>
-      <div className={styles.actionsContainer}>
-        <Search
-          query={query}
-          handleSearch={handleSearch}
-          handleCancelSearch={handleCancelSearch}
-          isSearching={isSearching}
-        />
-        <Link to={'/add'}>
-          <button>Add New Product</button>
-        </Link>
-      </div>
-      <div className={styles.filterRow}>
-        <Filter 
-        handleFilter={handleFilter}
-        selectedCategory={selectedCategory}
-        selectedStore={selectedStore}
-        categories={categories}
-        stores={stores}
-        handleShowAll={handleShowAll}
-        />
-      </div>
+        <div className={styles.actionsContainer}>
+          <Search
+            query={query}
+            handleSearch={handleSearch}
+            handleCancelSearch={handleCancelSearch}
+            isSearching={isSearching}
+          />
+          <div className={styles.addNewProductWrapper}>
+          <Link to={'/add'}>
+            <button className={styles.addTextBtn}>Add New Product</button>
+            <button className={styles.addIconBtn}><MdOutlineAdd/></button>
+          </Link>
+          </div>
+        </div>
+        {isModalOpen && (
+          <div>
+            <ManageFilterList onClose={modalClose} />
+          </div>
+        )}
+        <div className={styles.filterRow}>
+          <Filter
+            handleFilter={handleFilter}
+            selectedCategory={selectedCategory}
+            selectedStore={selectedStore}
+            categories={categories}
+            stores={stores}
+            handleShowAll={handleShowAll}
+            onOpen={modalOpen}
+          />
+          
+        </div>
       </section>
       {searchNotFound || filterNotFound ? (
         <div className={styles.noMatchContainer}>

@@ -1,12 +1,32 @@
-.filterDiv{
-    display: flex;
-    padding: 5px 0;
-    align-items: center;
-    align-self: center;
-    justify-content: center;
-    flex-wrap: wrap;
+.filterDiv {
+  display: flex;
+  padding: 5px 0;
+  align-items: center;
+  align-self: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  overflow-x: scroll;
 }
 
+.editButton {
+  color: black;
+  cursor: pointer;
+  transition: transform 0.2s ease-out, color 0.2s ease-out;
+  padding: 5px;
+  border-radius: 4px;
+  font-size: 1.5rem;
+  order: 1;
+}
+
+.editButton :hover {
+  color: #9e7565;
+  transform: scale(1.15);
+}
+
+.editButton:active {
+  transform: scale(1.25);
+  color: #8a6456;
+}
 .filterButton {
   background-color: #f0f0f0;
   color: #555;
@@ -19,6 +39,7 @@
   margin-right: 10px;
   display: inline-block;
   align-self: center;
+  order: 2;
 }
 
 .active {
@@ -44,11 +65,18 @@
 }
 
 @media (max-width: 767px) {
+  .filterDiv {
+    padding: 2px;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    overflow-x: scroll;
+  }
   .filterButton {
     margin-bottom: 10px;
+    order: 1;
   }
 
-  .filterDiv{
-    padding: 2px;
-}
+  .editButton {
+    order: 2;
+  }
 }
