@@ -7,7 +7,7 @@ import ErrorContainer from '../shared/ErrorContainer';
 import Filter from '../feature/Filter';
 import { useLists } from '../context/ListContext.jsx';
 import ManageFilterList from '../feature/ManageFilterList.jsx';
-import { MdOutlineAdd } from "react-icons/md";
+import { MdOutlineAdd } from 'react-icons/md';
 
 function Home({
   products,
@@ -150,10 +150,12 @@ function Home({
             isSearching={isSearching}
           />
           <div className={styles.addNewProductWrapper}>
-          <Link to={'/add'}>
-            <button className={styles.addTextBtn}>Add New Product</button>
-            <button className={styles.addIconBtn}><MdOutlineAdd/></button>
-          </Link>
+              <Link to={'/add'}>
+                <button className={styles.addTextBtn}>Add New Product</button>
+                <button className={styles.addIconBtn}>
+                  <MdOutlineAdd />
+                </button>
+              </Link>
           </div>
         </div>
         {isModalOpen && (
@@ -171,7 +173,6 @@ function Home({
             handleShowAll={handleShowAll}
             onOpen={modalOpen}
           />
-          
         </div>
       </section>
       {searchNotFound || filterNotFound ? (

@@ -30,7 +30,7 @@ function NotFound() {
   return (
     <StyleDiv>
       <h2>Page Not Found</h2>
-      <Link to="/">
+      <Link to="/home">
         <button>Go back to Home</button>
       </Link>
     </StyleDiv>

@@ -35,7 +35,7 @@ function About() {
   return (
     <StyleDiv>
       <h2>My GoodBuy </h2>
-      <h3>created by Yongting Shi</h3>
+      <h3>created by Tina Shi</h3>
       <p>It is a tool designed to help manage and remember good products that purchased from stores.</p>
       <p>Users can add, edit and delete their products, and all data is securely stored and instantly synchronized using Google Firebase/Firestore.</p>
     </StyleDiv>

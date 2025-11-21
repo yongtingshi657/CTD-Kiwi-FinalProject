@@ -19,7 +19,7 @@ export default function Login() {
 
   useEffect(() => {
     if (!isAuthLoading && currentUser) {
-      navigate('/', { replace: true }); 
+      navigate('/home', { replace: true }); 
     }
   }, [currentUser, isAuthLoading, navigate]);
 
@@ -36,7 +36,7 @@ export default function Login() {
       await login(email, password);
       setSuccessMessage("Login Successfully")
       setTimeout(() => {
-          navigate('/');
+          navigate('/home');
         }, 500);
     } catch {
       setError(true);
@@ -46,6 +46,7 @@ export default function Login() {
   }
 
   return (
+    <>
     <div className={styles.loginDiv}>
       <h1>Log In</h1>
       {successMessage && <SuccessContainer>{successMessage}</SuccessContainer>}
@@ -63,6 +64,7 @@ export default function Login() {
         <button type="submit" disabled={isLoggingIn}>Login</button>
         {error && <span>Wrong Email or Password</span>}
       </form>
-    </div>
+    </div> 
+    </>
   );
 }

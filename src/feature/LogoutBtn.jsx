@@ -2,25 +2,27 @@ import { useAuth } from '../context/useAuth';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
-export default function LogoutBtn() {
-  const StyledLogoutButton = styled.button`
-    background-color: transparent;
+ const StyledLogoutButton = styled.button`
+    background-color: grey;
     border: none;
-    padding: 0;
-    color: grey;
+    padding: 10px;
+    color: white;
     font-weight: 500;
-  font-size: inherit;
+    font-size: inherit;
     transition: color 0.2s ease-in-out, background-color 0.2s;
+    margin: 0;
+    cursor: pointer;
 
 
     &:hover {
-      color: white; /* Example: Darken text */
-      /* Add a subtle background highlight */
       background-color: #b48a78 ;
       border-radius: 4px;
-      padding: 0 5px; /* Add slight padding on hover */
+      padding: 10px;/* Add slight padding on hover */
     }
   `;
+
+export default function LogoutBtn() {
+ 
   const { currentUser, logout } = useAuth();
 
   const navigate = useNavigate();
@@ -33,14 +35,14 @@ export default function LogoutBtn() {
     }
     try {
       await logout();
-      navigate('/login');
+      navigate('/');
     } catch (error) {
       console.error('Failed to log out:', error);
     }
   }
 
   if (!currentUser) {
-    return null;
+    return 
   }
 
   return (

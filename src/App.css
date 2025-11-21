@@ -19,5 +19,27 @@ button {
 
 /* 
 maincolor : #b48a78 
-hover: #9e7565
+hover: #9e7565(dark) and #d7805b(light)
 */
+
+ .loginHeading {
+  font-size: 1.25rem; 
+  font-weight: 700;
+  text-align: center; 
+  color: #333333; 
+  letter-spacing: 0.5px;
+  margin-top: 20px;
+
+}
+
+.loginHeading  span{
+    color: #b48a78;
+    cursor: pointer;
+    border-bottom:2px solid #b48a78;
+    transition: color 0.3s ease, border-bottom 0.3s ease;
+  }
+
+.loginHeading span:hover{
+    color: #9e7565;
+}
+
