@@ -9,7 +9,7 @@ export default function PrivateRoute({ children }) {
   }
 
   if (!currentUser) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/" replace />;
   }
 
   return children ? children : <Outlet />;

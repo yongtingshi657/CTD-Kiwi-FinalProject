@@ -16,6 +16,7 @@ function Home({
   isLoading,
   errorMessage,
   handleDismissError,
+  linkPath
 }) {
   const [searchResult, setSearchResult] = useState(null);
   const [query, setQuery] = useState('');
@@ -190,6 +191,7 @@ function Home({
               key={product.id}
               deleteProduct={deleteProduct}
               editProduct={editProduct}
+              linkPath={linkPath}
             />
           ))}
         </div>
