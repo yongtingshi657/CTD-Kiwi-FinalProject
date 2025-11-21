@@ -160,7 +160,7 @@ function App() {
           <Route index element={<Demo />} />
           <Route path="login" element={<Login />} />
            <Route
-              path="product/:id"
+              path="demoproduct/:id"
               element={
                 <ProductDetail
                   products={demoProducts}
@@ -181,6 +181,7 @@ function App() {
                   deleteProduct={deleteProduct}
                   editProduct={editProduct}
                   handleDismissError={handleDismissError}
+                  linkPath="product"
                 />
               }
             />

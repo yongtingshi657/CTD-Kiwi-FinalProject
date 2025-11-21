@@ -4,8 +4,8 @@ import { MdEdit } from 'react-icons/md';
 import defaultImage from '../assets/defaultImage.png';
 import { Link, useNavigate } from 'react-router-dom';
 
-function ProductCard({ product, deleteProduct }) {
-  const detailLink = `/product/${product.id}`;
+function ProductCard({ product, deleteProduct, linkPath }) {
+  const detailLink = `/${linkPath}/${product.id}`;
   const navigate = useNavigate();
 
   function handleEditClick(e) {

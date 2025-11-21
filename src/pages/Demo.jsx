@@ -30,6 +30,7 @@ export default function Demo() {
         products={products}
         deleteProduct={() => navigate('/login')}
         editProduct={() => navigate('/login')}
+        linkPath = 'demoproduct'
       />
     </>
   );

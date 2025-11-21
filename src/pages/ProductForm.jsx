@@ -127,7 +127,7 @@ const ProductForm = ({ addProduct, products, mode, editProduct }) => {
 
         setTimeout(() => {
           navigate('/home');
-        }, 2000);
+        }, 200);
       }
     } catch (error) {
       console.log('Error caught in handleSubmit:', error);
