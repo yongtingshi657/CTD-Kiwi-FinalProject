@@ -13,6 +13,7 @@ import { useNewSelection } from '../Utils/useNewSelection';
 import ErrorContainer from '../shared/ErrorContainer';
 import SuccessContainer from '../shared/SuccessContainer';
 import { useLists } from '../context/ListContext.jsx';
+import { useAuth } from '../context/useAuth.js';
 
 const ProductForm = ({ addProduct, products, mode, editProduct }) => {
   // update
@@ -92,6 +93,8 @@ const ProductForm = ({ addProduct, products, mode, editProduct }) => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   }
 
+  const { currentUser, loading } = useAuth();
+
   async function handleSubmit(e) {
     e.preventDefault();
 
@@ -111,10 +114,10 @@ const ProductForm = ({ addProduct, products, mode, editProduct }) => {
     try {
       let result;
       if (mode === 'edit' && productToEdit) {
-        await editProduct(formData);
+        await editProduct(formData, currentUser);
         result = { message: 'Product updated successfully!' };
       } else {
-        await addProduct(formData);
+        await addProduct(formData, currentUser);
         setFormData(defaultNewProductData);
         result = { message: 'Product added successfully!' };
       }
@@ -123,7 +126,7 @@ const ProductForm = ({ addProduct, products, mode, editProduct }) => {
         setSuccessMessage(result.message);
 
         setTimeout(() => {
-          navigate('/');
+          navigate('/home');
         }, 2000);
       }
     } catch (error) {
@@ -151,6 +154,9 @@ const ProductForm = ({ addProduct, products, mode, editProduct }) => {
   };
 
   const modeDisplay = mode.charAt(0).toUpperCase() + mode.slice(1);
+  const isUploading = percentage !== null && percentage < 100;
+
+  const isFormDisabled = loading || isUploading || !currentUser
 
   return (
     <>
@@ -264,9 +270,9 @@ const ProductForm = ({ addProduct, products, mode, editProduct }) => {
             <button
               className={styles.addNewButton}
               type="submit"
-              disabled={percentage !== null && percentage < 100}
+              disabled={isFormDisabled}
             >
-              {modeDisplay} New Product
+              {loading ? 'Confirming Login...' : isUploading ? 'Uploading...' : `${modeDisplay} New Product`}
             </button>
           </div>
         </form>

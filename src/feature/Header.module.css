@@ -23,13 +23,31 @@
   display: flex;
   flex-direction: row;
   gap: 10px;
+  align-items: center;
 }
+
+.nav > * {
+  margin: 0; /* Critical for removing default button margins */
+  line-height: 1.2; /* Standardize text height */
+  vertical-align: middle; /* Aggressively align text baseline */
+}
+
+.loginBtn {
+  font-size: 1rem;
+   transition: color 0.2s ease-in-out, background-color 0.2s;
+}
+
+.loginBtn:hover {
+  font-size: 1.25rem;
+  background-color: #d7805b;
+}
+
 .navLink {
   text-decoration: none;
   color: grey;
   font-size: 1em;
   font-weight: 500;
-  padding: 5px 0;
+  padding: 5px;
   transition: color 0.3s ease, border-bottom 0.3s ease;
   cursor: pointer;
 }
@@ -40,7 +58,7 @@
 }
 
 .navLink:hover {
-  padding: 5px;
+  padding: 10px;
   border-radius: 5px;
   background-color: #b48a78;
   color: white;
@@ -51,10 +69,12 @@
     flex-direction: column;
     margin-bottom: 0;
     align-items: flex-start;
+    padding: 10px;
   }
 
   .nav {
     width: 100%;
-  justify-content: flex-end;
+    justify-content: flex-end;
+    align-items: center;
   }
 }
